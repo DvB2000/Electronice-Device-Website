@@ -1,0 +1,106 @@
+﻿@model BanHang.Models.HomeModel
+@{
+    ViewBag.Title = "Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="section-content padding-y">
+    <div class="container">
+        <div class="row">
+            <aside class="col-md-3">
+                <nav class="list-group">
+                    <a class="list-group-item" href="/thong-tin/@Session["idUser"]"> Thông tin tài khoản </a>
+                    <a class="list-group-item" href="#"> Địa chỉ </a>
+                    <a class="list-group-item active" href="/dat-hang/@Session["idUser"]"> Đơn đặt hàng </a>
+                    <a class="list-group-item" href="#"> Yêu thích </a>
+                    <a class="list-group-item" href="#"> Cài đặt </a>
+                    <a class="list-group-item" href="/dang-xuat"> Đăng xuất </a>
+                </nav>
+            </aside> <!-- col.// -->
+            <main class="col-md-9">
+                @if (Model.ListUser.Where(n => n.Id == int.Parse(Session["idUser"].ToString())) != null)
+                {
+                    foreach (var item in Model.ListOrder.Where(o =>o.UserId == int.Parse(Session["idUser"].ToString())))
+                    {
+                        <article class="card mb-4">
+                            <header class="card-header">
+                                <a href="#" class="float-right"> <i class="fa fa-print"></i> Print</a>
+                                <strong class="d-inline-block mr-3">Order ID: @item.Id</strong>
+                                <span>Order Date: @item.CreatedOnUtc</span>
+                            </header>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="text-muted">Thông tin</h6>
+                                        <p>
+                                            @Session["FullName"] <br>
+                                            Phone @Session["Phone"] Email: @Session["Email"]<br>
+                                            Address:@Session["Address"] <br>
+                                        </p>
+                                    </div>
+                                    <!-- <div class="col-md-4">
+                                                                            <h6 class="text-muted">Payment</h6>
+                                                                            <span class="text-success">
+                                                                                <i class="fab fa-lg fa-cc-visa"></i>
+                                                                                Visa  **** 4216
+                                                                            </span>
+                                                                            <p>
+                                                                                Subtotal: $356 <br>
+                                                                                Shipping fee:  $56 <br>
+                                                                                <span class="b">Total:  $456 </span>
+                                                                            </p>
+                                    </div>-->
+                                </div> <!-- row.// -->
+                            </div> <!-- card-body .// -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        <tr><h6 class="col-md-6">Sản phẩm:</h6></tr>
+                                        @foreach (var itemod in Model.ListOrDerDetail.Where(m => m.OrderId == item.Id))
+                                        {
+                                            foreach (var itempro in Model.ListProduct.Where(p => p.Id == itemod.ProductId))
+                                            {
+                                                <tr>
+                                                    <td width="65">
+                                                        <img src="~/Content/images/items/@itempro.Avartar" class="img-xs border">
+                                                    </td>
+                                                    <td>
+                                                        <p class="title mb-0">@itempro.Name</p>
+                                                        <var class="price text-muted">@itempro.Price VND</var>
+                                                    </td>
+                                                    <td>
+                                                        <p>Số lượng : @itemod.Quantity</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>
+                                                            Tổng Tiền:
+                                                            @{
+                                                                double total = double.Parse(itemod.Quantity.ToString()) * double.Parse(itempro.Price.ToString());
+                                                            }
+                                                            @total VND
+                                                        </p>
+                                                    </td>
+                                                    <!--
+                                                    <td width="250">
+                                                        <a href="#" class="btn btn-outline-primary">Track order</a>
+                                                        <div class="dropdown d-inline-block">
+                                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-outline-secondary">More</a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a href="#" class="dropdown-item">Return</a>
+                                                                <a href="#" class="dropdown-item">Cancel order</a>
+                                                            </div>
+                                                        </div> dropdown.//
+                                                    </td>-->
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div> <!-- table-responsive .end// -->
+                        </article> <!-- card order-item .// -->
+                    }
+                }
+            </main> <!-- col.// -->
+
+        </div>
+    </div>
+</section>
